@@ -11,12 +11,10 @@ class FlashCardViewModel: ObservableObject {
     @Published var cards: [FlashCard] = []
     @Published var currentIndex: Int = 0
     
-    // 추후 db 업데이트
     init() {
-        cards = [
-            FlashCard(id: UUID(), question: "What is a stack?", answer: "LIFO data structure", category: "Data Structure", level: 0),
-            FlashCard(id: UUID(), question: "Big-O asymptotic notation of binary search is?", answer: "O(log N)", category: "Algorithm", level: 0),
-        ]
+        if let dbService = CardDBService() {
+            self.cards = dbService.fetchCards()
+        }
     }
     
     var currentCard: FlashCard? {

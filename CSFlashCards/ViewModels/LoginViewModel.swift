@@ -19,7 +19,7 @@ class LoginViewModel: NSObject, ObservableObject {
     
     func loginWithEmail() {
         if email == "test@test.com", password == "1234" {
-            self.user = User(id: UUID(), userId: "test", nickname: "Test", userName: "홍길동", email: "test@test.com", createdAt: Date())
+            self.user = User(id: Int(), userId: "test", nickname: "Test", userName: "홍길동", email: "test@test.com", createdAt: Date())
             self.isLoggedIn = true
         } else {
             self.errorMessage = "로그인 정보가 올바르지 않습니다."
@@ -33,7 +33,7 @@ class LoginViewModel: NSObject, ObservableObject {
                 let userId = credential.user
                 let fullName = credential.fullName?.givenName ?? ""
                 let email = credential.email
-                let user = User(id: UUID(), userId: userId, nickname: "", userName: fullName, email: email, createdAt: Date())
+                let user = User(id: Int(), userId: userId, nickname: "", userName: fullName, email: email, createdAt: Date())
                 self.user = user
                 self.isLoggedIn = true
                 self.errorMessage = nil

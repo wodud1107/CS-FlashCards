@@ -22,7 +22,7 @@ struct FlashCardView: View {
                         .shadow(radius: 5)
 
                     VStack {
-                        Text(isFlipped ? card.answer : card.question)
+                        Text(isFlipped ? card.back : card.front)
                             .font(.title)
                             .foregroundColor(.primary)
                             .multilineTextAlignment(.center)
