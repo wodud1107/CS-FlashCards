@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var loginVM = LoginViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if loginVM.isLoggedIn {
+            FlashCardView(viewModel: FlashCardViewModel())
+        } else {
+            LoginView(viewModel: loginVM)
         }
-        .padding()
     }
 }
 
