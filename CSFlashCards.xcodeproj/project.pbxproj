@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4BF14C8B2E1CDFE500BCFDB9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4BF14C8A2E1CDFDC00BCFDB9 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4BF14C6B2E1CDFB700BCFDB9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		4BF14C5D2E1CDFB500BCFDB9 /* CSFlashCards.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CSFlashCards.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BF14C6A2E1CDFB700BCFDB9 /* CSFlashCardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CSFlashCardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BF14C742E1CDFB700BCFDB9 /* CSFlashCardsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CSFlashCardsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BF14C8A2E1CDFDC00BCFDB9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -43,6 +48,11 @@
 		4BF14C772E1CDFB700BCFDB9 /* CSFlashCardsUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CSFlashCardsUITests;
+			sourceTree = "<group>";
+		};
+		4BF14C8C2E1CDFF100BCFDB9 /* Docs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Docs;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +85,8 @@
 		4BF14C542E1CDFB500BCFDB9 = {
 			isa = PBXGroup;
 			children = (
+				4BF14C8A2E1CDFDC00BCFDB9 /* README.md */,
+				4BF14C8C2E1CDFF100BCFDB9 /* Docs */,
 				4BF14C5F2E1CDFB500BCFDB9 /* CSFlashCards */,
 				4BF14C6D2E1CDFB700BCFDB9 /* CSFlashCardsTests */,
 				4BF14C772E1CDFB700BCFDB9 /* CSFlashCardsUITests */,
@@ -109,6 +121,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				4BF14C5F2E1CDFB500BCFDB9 /* CSFlashCards */,
+				4BF14C8C2E1CDFF100BCFDB9 /* Docs */,
 			);
 			name = CSFlashCards;
 			packageProductDependencies = (
@@ -212,6 +225,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BF14C8B2E1CDFE500BCFDB9 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
