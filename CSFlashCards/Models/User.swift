@@ -15,3 +15,11 @@ struct User: Codable {
     let email: String?
     let createdAt: Date
 }
+
+import CryptoKit
+
+func generateToken(for userId: String) -> String {
+    let data = Data(userId.utf8)
+    let hash = SHA256.hash(data: data)
+    return hash.compactMap { String(format: "%02x", $0) }.joined()
+}

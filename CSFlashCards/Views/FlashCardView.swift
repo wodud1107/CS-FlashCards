@@ -36,10 +36,16 @@ struct FlashCardView: View {
                 }
 
                 HStack {
-                    Button("Prev") { viewModel.prevCard() }
+                    Button("Prev") {
+                        viewModel.prevCard()
+                        isFlipped = false
+                    }
                         .disabled(viewModel.currentIndex == 0)
                     Spacer()
-                    Button("Next") { viewModel.nextCard() }
+                    Button("Next") {
+                        viewModel.nextCard()
+                        isFlipped = false
+                    }
                         .disabled(viewModel.currentIndex >= viewModel.cards.count - 1)
                 }
                 .padding(.horizontal, 40)

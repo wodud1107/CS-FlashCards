@@ -9,6 +9,7 @@ import SwiftUI
 import AuthenticationServices
 
 struct LoginView: View {
+    @EnvironmentObject var userSession: UserSession
     @ObservedObject var viewModel: LoginViewModel
     
     var body: some View {
@@ -16,7 +17,7 @@ struct LoginView: View {
             TextField("이메일", text: $viewModel.email)
             SecureField("비밀번호", text: $viewModel.password)
             Button("로그인") {
-                viewModel.loginWithEmail()
+                viewModel.loginWithEmail(userSession: userSession)
             }
         }
         .padding()
@@ -31,7 +32,7 @@ struct LoginView: View {
                     request.requestedScopes = [.fullName, .email]
                 },
                 onCompletion: { result in
-                    viewModel.handleAppleSignIn(result: result)
+                    viewModel.handleAppleSignIn(userSession: userSession, result: result)
                 },
             )
             .signInWithAppleButtonStyle(.black)

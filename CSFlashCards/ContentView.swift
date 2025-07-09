@@ -8,17 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var userSession: UserSession
     @StateObject private var loginVM = LoginViewModel()
     
     var body: some View {
-        if loginVM.isLoggedIn {
-            FlashCardView(viewModel: FlashCardViewModel())
-        } else {
+        if userSession.user == nil {
             LoginView(viewModel: loginVM)
+        } else {
+            MainTabView()
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

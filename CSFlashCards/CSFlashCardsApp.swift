@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct CSFlashCardsApp: App {
+    @StateObject var userSession = UserSession()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(userSession)
         }
     }
 }
