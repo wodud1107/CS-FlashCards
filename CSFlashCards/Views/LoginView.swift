@@ -11,21 +11,20 @@ import AuthenticationServices
 struct LoginView: View {
     @EnvironmentObject var userSession: UserSession
     @ObservedObject var viewModel: LoginViewModel
+    @State private var showNicknameSheet = false
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 32) {
+            Text("CS FlashCards")
+                .font(.largeTitle)
+                .bold()
+
             TextField("이메일", text: $viewModel.email)
             SecureField("비밀번호", text: $viewModel.password)
             Button("로그인") {
                 viewModel.loginWithEmail(userSession: userSession)
             }
-        }
-        .padding()
-        VStack(spacing: 32) {
-            Text("CS FlashCards")
-                .font(.largeTitle)
-                .bold()
-            
+
             SignInWithAppleButton(
                 .signIn,
                 onRequest: { request in
@@ -33,31 +32,39 @@ struct LoginView: View {
                 },
                 onCompletion: { result in
                     viewModel.handleAppleSignIn(userSession: userSession, result: result)
-                },
+                }
             )
             .signInWithAppleButtonStyle(.black)
             .frame(height: 50)
             .cornerRadius(10)
-            
+
             if let error = viewModel.errorMessage {
                 Text(error)
                     .foregroundStyle(.red)
                     .font(.caption)
             }
-            
-            if let user = viewModel.user {
-                if user.nickname.isEmpty {
-                    VStack {
-                        Text("이름을 정해주세요.")
-                        TextField("이름", text: $viewModel.nickname)
-                        Button("저장") {
-                            viewModel.updateNickname(viewModel.nickname)
-                        }
-                    }
-                }
-                Text("환영합니다, \(user.nickname) 님!")
-            }
         }
         .padding()
+        .onChange(of: userSession.user) { newUser in
+            print("🟢 onChange userSession.user fired! newUser: \(String(describing: newUser))")
+            if let user = newUser, user.nickname.isEmpty {
+                print("🔵 닉네임 비어있음, 모달 띄움")
+                showNicknameSheet = true
+            }
+        }
+        .sheet(isPresented: $showNicknameSheet) {
+            VStack(spacing: 16) {
+                Text("닉네임을 입력하세요")
+                TextField("닉네임", text: $viewModel.nickname)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                Button("저장") {
+                    viewModel.updateNickname(userSession: userSession, viewModel.nickname)
+                    showNicknameSheet = false
+                }
+                .disabled(viewModel.nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            .padding()
+            .presentationDetents([.fraction(0.3)])
+        }
     }
 }

@@ -12,10 +12,10 @@ struct ContentView: View {
     @StateObject private var loginVM = LoginViewModel()
     
     var body: some View {
-        if userSession.user == nil {
-            LoginView(viewModel: loginVM)
-        } else {
+        if let user = userSession.user, !user.nickname.isEmpty {
             MainTabView()
+        } else {
+            LoginView(viewModel: loginVM)
         }
     }
 }

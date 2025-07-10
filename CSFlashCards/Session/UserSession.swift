@@ -11,18 +11,9 @@ class UserSession: ObservableObject {
     @Published var user: User?
     
     init() {
-        let userId = "test"
-        if let savedToken = UserDefaults.standard.string(forKey: userId) {
-            if savedToken == generateToken(for: userId) {
-                self.user = User(
-                    id: 1,
-                    userId: userId,
-                    nickname: "Test",
-                    userName: "홍길동",
-                    email: "test@test.com",
-                    createdAt: Date()
-                )
-            }
+        if let userData = UserDefaults.standard.data(forKey: "loginUser") {
+            let user = try? JSONDecoder().decode(User.self, from: userData)
+            self.user = user
         }
     }
 }
