@@ -19,7 +19,15 @@ class LoginViewModel: NSObject, ObservableObject {
     
     func loginWithEmail(userSession: UserSession) {
         if email == "test@test.com", password == "1234" {
-            let user = User(id: Int(), userId: "test", nickname: "", userName: "홍길동", email: "test@test.com", createdAt: Date())
+            guard let userData = UserDefaults.standard.data(forKey: "loginUser") else {
+                let user = User(id: Int(), userId: "test", nickname: "", userName: "홍길동", email: "test@test.com", createdAt: Date())
+                userSession.user = user
+                self.isLoggedIn = true
+                self.errorMessage = nil
+                print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
+                return
+            }
+            let user = try? JSONDecoder().decode(User.self, from: userData)
             userSession.user = user
             self.isLoggedIn = true
             
@@ -62,7 +70,7 @@ class LoginViewModel: NSObject, ObservableObject {
                 UserDefaults.standard.set(encoded, forKey: "loginUser")
             }
             let token = generateToken(for: user.userId)
-            UserDefaults.standard.set(token, forKey: "loginToken")
+            UserDefaults.standard.set(token, forKey: user.userId)
             
             userSession.user = user
             print("🟢 닉네임 등록됨: \(nickname)")
