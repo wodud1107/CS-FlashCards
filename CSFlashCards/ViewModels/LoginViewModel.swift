@@ -23,10 +23,6 @@ class LoginViewModel: NSObject, ObservableObject {
             userSession.user = user
             self.isLoggedIn = true
             
-            if let encoded = try? JSONEncoder().encode(user) {
-                UserDefaults.standard.set(encoded, forKey: "loginUser")
-            }
-            
             self.errorMessage = nil
             print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
         } else {
@@ -46,10 +42,6 @@ class LoginViewModel: NSObject, ObservableObject {
                 userSession.user = user
                 self.isLoggedIn = true
                 
-                if let encoded = try? JSONEncoder().encode(user) {
-                    UserDefaults.standard.set(encoded, forKey: "loginUser")
-                }
-                
                 self.errorMessage = nil
                 print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
             }
@@ -65,8 +57,15 @@ class LoginViewModel: NSObject, ObservableObject {
         
         if var user = userSession.user {
             user.nickname = nickname
+            
+            if let encoded = try? JSONEncoder().encode(user) {
+                UserDefaults.standard.set(encoded, forKey: "loginUser")
+            }
+            let token = generateToken(for: user.userId)
+            UserDefaults.standard.set(token, forKey: "loginToken")
+            
             userSession.user = user
-            print("🟢 닉네임 입력됨: \(nickname)")
+            print("🟢 닉네임 등록됨: \(nickname)")
         }
     }
     

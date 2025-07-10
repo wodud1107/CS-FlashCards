@@ -13,7 +13,11 @@ class UserSession: ObservableObject {
     init() {
         if let userData = UserDefaults.standard.data(forKey: "loginUser") {
             let user = try? JSONDecoder().decode(User.self, from: userData)
-            self.user = user
+            if let savedToken = UserDefaults.standard.string(forKey: "loginToken") {
+                if savedToken == generateToken(for: user!.userId) {
+                    self.user = user
+                }
+            }
         }
     }
 }
