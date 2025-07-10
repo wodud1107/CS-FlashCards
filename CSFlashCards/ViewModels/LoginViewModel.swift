@@ -18,7 +18,9 @@ class LoginViewModel: NSObject, ObservableObject {
     @Published var password: String = ""
     
     func loginWithEmail(userSession: UserSession) {
+        // 테스트 시에는 Apple 로그인 이용 불가
         if email == "test@test.com", password == "1234" {
+            // 닉네임 입력 테스트 - UserDefaults에 저장된 loginUser 키의 데이터를 지우면 닉네임 입력 다시 해야됨
             guard let userData = UserDefaults.standard.data(forKey: "loginUser") else {
                 let user = User(id: Int(), userId: "test", nickname: "", userName: "홍길동", email: "test@test.com", createdAt: Date())
                 userSession.user = user
@@ -66,6 +68,7 @@ class LoginViewModel: NSObject, ObservableObject {
         if var user = userSession.user {
             user.nickname = nickname
             
+            // 닉네임 입력 시 유저 정보가 완성되므로 UserDefaults에 저장
             if let encoded = try? JSONEncoder().encode(user) {
                 UserDefaults.standard.set(encoded, forKey: "loginUser")
             }
