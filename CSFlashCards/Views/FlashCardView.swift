@@ -22,11 +22,22 @@ struct FlashCardView: View {
                         .shadow(radius: 5)
 
                     VStack {
-                        Text(isFlipped ? card.back : card.front)
-                            .font(.title)
-                            .foregroundColor(.primary)
-                            .multilineTextAlignment(.center)
-                            .padding()
+                        if isFlipped {
+                            ScrollView {
+                                Text(card.back)
+                                    .font(.title)
+                                    .foregroundColor(.primary)
+                                    .multilineTextAlignment(.center)
+                                    .padding()
+                            }
+                            .frame(maxHeight:220)
+                        } else {
+                            Text(card.front)
+                                .font(.title)
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                        }
                     }
                 }
                 .onTapGesture {

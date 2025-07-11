@@ -29,10 +29,17 @@ class LoginViewModel: NSObject, ObservableObject {
                 print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
                 return
             }
-            let user = try? JSONDecoder().decode(User.self, from: userData)
+            guard let user = try? JSONDecoder().decode(User.self, from: userData) else {
+                print("❌ 재로그인 실패")
+                fatalError()
+            }
             userSession.user = user
-            self.isLoggedIn = true
             
+            // 토큰 저장
+            let token = generateToken(for: user.userId)
+            UserDefaults.standard.set(token, forKey: user.userId)
+            
+            self.isLoggedIn = true
             self.errorMessage = nil
             print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
         } else {
@@ -50,8 +57,12 @@ class LoginViewModel: NSObject, ObservableObject {
                 let email = credential.email
                 let user = User(id: Int(), userId: userId, nickname: "", userName: fullName, email: email, createdAt: Date())
                 userSession.user = user
-                self.isLoggedIn = true
                 
+                // 토큰 저장
+                let token = generateToken(for: user.userId)
+                UserDefaults.standard.set(token, forKey: user.userId)
+                
+                self.isLoggedIn = true
                 self.errorMessage = nil
                 print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
             }
@@ -72,8 +83,6 @@ class LoginViewModel: NSObject, ObservableObject {
             if let encoded = try? JSONEncoder().encode(user) {
                 UserDefaults.standard.set(encoded, forKey: "loginUser")
             }
-            let token = generateToken(for: user.userId)
-            UserDefaults.standard.set(token, forKey: user.userId)
             
             userSession.user = user
             print("🟢 닉네임 등록됨: \(nickname)")
