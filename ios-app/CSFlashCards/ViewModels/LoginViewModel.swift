@@ -8,6 +8,7 @@
 import Foundation
 import AuthenticationServices
 import SwiftUI
+import SwiftKeychainWrapper
 
 class LoginViewModel: NSObject, ObservableObject {
     @Published var isLoggedIn: Bool = false
@@ -25,14 +26,13 @@ class LoginViewModel: NSObject, ObservableObject {
         APISession.shared.appleSignIn(userId: userId, email: email, userName: userName) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let user):
-                    userSession.user = user
+                case .success(let res):
+                    userSession.user = res.user
                     self?.isLoggedIn = true
                     self?.errorMessage = nil
                     
                     // 토큰 저장
-                    let token = generateToken(for: user.userId)
-                    UserDefaults.standard.set(token, forKey: "loginToken")
+                    KeychainWrapper.standard.set(res.token, forKey: "jwtToken")
                 case .failure(let error):
                     self?.isLoggedIn = false
                     self?.errorMessage = error.localizedDescription
@@ -59,7 +59,7 @@ class LoginViewModel: NSObject, ObservableObject {
     
     func logout(userSession: UserSession) {
         print("🟢 로그아웃됨: \(String(describing: userSession.user?.userId))")
-        UserDefaults.standard.removeObject(forKey: "loginToken")
+        KeychainWrapper.standard.removeObject(forKey: "jwtToken")
         userSession.user = nil
         self.isLoggedIn = false
         self.errorMessage = nil

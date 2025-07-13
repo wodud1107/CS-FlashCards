@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4B90200D2E1D5050008EF359 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 4B90200C2E1D5050008EF359 /* SQLite */; };
+		4BBB339E2E23F6E100429C42 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBB339D2E23F6E100429C42 /* SwiftKeychainWrapper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BBB339E2E23F6E100429C42 /* SwiftKeychainWrapper in Frameworks */,
 				4B90200D2E1D5050008EF359 /* SQLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +120,7 @@
 			name = CSFlashCards;
 			packageProductDependencies = (
 				4B90200C2E1D5050008EF359 /* SQLite */,
+				4BBB339D2E23F6E100429C42 /* SwiftKeychainWrapper */,
 			);
 			productName = CSFlashCards;
 			productReference = 4BF14C5D2E1CDFB500BCFDB9 /* CSFlashCards.app */;
@@ -203,6 +206,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4B90200B2E1D4FB6008EF359 /* XCRemoteSwiftPackageReference "SQLite" */,
+				4BBB339C2E23F6E100429C42 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4BF14C5E2E1CDFB500BCFDB9 /* Products */;
@@ -571,6 +575,14 @@
 				minimumVersion = 0.15.4;
 			};
 		};
+		4BBB339C2E23F6E100429C42 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -578,6 +590,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4B90200B2E1D4FB6008EF359 /* XCRemoteSwiftPackageReference "SQLite" */;
 			productName = SQLite;
+		};
+		4BBB339D2E23F6E100429C42 /* SwiftKeychainWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BBB339C2E23F6E100429C42 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
+			productName = SwiftKeychainWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
