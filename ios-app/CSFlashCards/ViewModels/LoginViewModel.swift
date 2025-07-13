@@ -17,81 +17,49 @@ class LoginViewModel: NSObject, ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     
-    func loginWithEmail(userSession: UserSession) {
-        // 테스트 시에는 Apple 로그인 이용 불가
-        if email == "test@test.com", password == "1234" {
-            // 닉네임 입력 테스트 - UserDefaults에 저장된 loginUser 키의 데이터를 지우면 닉네임 입력 다시 해야됨
-            guard let userData = UserDefaults.standard.data(forKey: "loginUser") else {
-                let user = User(id: Int(), userId: "test", nickname: "", userName: "홍길동", email: "test@test.com", createdAt: Date())
-                userSession.user = user
-                self.isLoggedIn = true
-                self.errorMessage = nil
-                print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
-                return
+    func handleAppleSignIn(credential: ASAuthorizationAppleIDCredential, userSession: UserSession) {
+        let userId = credential.user
+        let email = credential.email
+        let userName = credential.fullName?.givenName
+
+        APISession.shared.appleSignIn(userId: userId, email: email, userName: userName) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let user):
+                    userSession.user = user
+                    self?.isLoggedIn = true
+                    self?.errorMessage = nil
+                    
+                    // 토큰 저장
+                    let token = generateToken(for: user.userId)
+                    UserDefaults.standard.set(token, forKey: "loginToken")
+                case .failure(let error):
+                    self?.isLoggedIn = false
+                    self?.errorMessage = error.localizedDescription
+                }
             }
-            guard let user = try? JSONDecoder().decode(User.self, from: userData) else {
-                print("❌ 재로그인 실패")
-                fatalError()
-            }
-            userSession.user = user
-            
-            // 토큰 저장
-            let token = generateToken(for: user.userId)
-            UserDefaults.standard.set(token, forKey: user.userId)
-            
-            self.isLoggedIn = true
-            self.errorMessage = nil
-            print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
-        } else {
-            self.errorMessage = "로그인 정보가 올바르지 않습니다."
-            print("❌ 로그인 실패")
         }
     }
     
-    func handleAppleSignIn(userSession: UserSession, result: Result<ASAuthorization, Error>) {
-        switch result {
-        case .success(let auth):
-            if let credential = auth.credential as? ASAuthorizationAppleIDCredential {
-                let userId = credential.user
-                let fullName = credential.fullName?.givenName ?? ""
-                let email = credential.email
-                let user = User(id: Int(), userId: userId, nickname: "", userName: fullName, email: email, createdAt: Date())
-                userSession.user = user
-                
-                // 토큰 저장
-                let token = generateToken(for: user.userId)
-                UserDefaults.standard.set(token, forKey: user.userId)
-                
-                self.isLoggedIn = true
-                self.errorMessage = nil
-                print("✅ 로그인 성공, userSession.user: \(String(describing: userSession.user))")
-            }
-        case .failure(let error):
-            self.errorMessage = error.localizedDescription
-            self.isLoggedIn = false
-            print("❌ 로그인 실패")
-        }
-    }
-    
-    func updateNickname(userSession: UserSession, _ nickname: String) {
-        self.nickname = nickname
+    func updateNickname(userSession: UserSession) {
+        guard let userId = userSession.user?.userId else { return }
         
-        if var user = userSession.user {
-            user.nickname = nickname
-            
-            // 닉네임 입력 시 유저 정보가 완성되므로 UserDefaults에 저장
-            if let encoded = try? JSONEncoder().encode(user) {
-                UserDefaults.standard.set(encoded, forKey: "loginUser")
+        APISession.shared.updateNickname(userId: userId, nickname: nickname) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let updatedUser):
+                    userSession.user = updatedUser
+                    self?.errorMessage = nil
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
             }
-            
-            userSession.user = user
-            print("🟢 닉네임 등록됨: \(nickname)")
         }
     }
     
     func logout(userSession: UserSession) {
         print("🟢 로그아웃됨: \(String(describing: userSession.user?.userId))")
-        UserDefaults.standard.removeObject(forKey: userSession.user!.userId)
+        UserDefaults.standard.removeObject(forKey: "loginToken")
         userSession.user = nil
         self.isLoggedIn = false
         self.errorMessage = nil

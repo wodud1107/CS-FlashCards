@@ -19,19 +19,20 @@ struct LoginView: View {
                 .font(.largeTitle)
                 .bold()
 
-            TextField("이메일", text: $viewModel.email)
-            SecureField("비밀번호", text: $viewModel.password)
-            Button("로그인") {
-                viewModel.loginWithEmail(userSession: userSession)
-            }
-
             SignInWithAppleButton(
                 .signIn,
                 onRequest: { request in
                     request.requestedScopes = [.fullName, .email]
                 },
                 onCompletion: { result in
-                    viewModel.handleAppleSignIn(userSession: userSession, result: result)
+                    switch result {
+                    case .success(let authResults):
+                        if let credential = authResults.credential as? ASAuthorizationAppleIDCredential {
+                            viewModel.handleAppleSignIn(credential: credential, userSession: userSession)
+                        }
+                    case .failure(let error):
+                        viewModel.errorMessage = error.localizedDescription
+                    }
                 }
             )
             .signInWithAppleButtonStyle(.black)
@@ -58,13 +59,19 @@ struct LoginView: View {
                 TextField("닉네임", text: $viewModel.nickname)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 Button("저장") {
-                    viewModel.updateNickname(userSession: userSession, viewModel.nickname)
+                    viewModel.updateNickname(userSession: userSession)
                     showNicknameSheet = false
                 }
                 .disabled(viewModel.nickname.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
             .padding()
             .presentationDetents([.fraction(0.3)])
+            
+            if let error = viewModel.errorMessage {
+                Text(error)
+                    .foregroundStyle(.red)
+                    .font(.caption)
+            }
         }
     }
 }

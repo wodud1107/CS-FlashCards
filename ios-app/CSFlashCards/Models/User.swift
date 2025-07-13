@@ -16,6 +16,12 @@ struct User: Codable, Equatable {
     let createdAt: Date
 }
 
+struct LoginResponse: Codable {
+    let success: Bool
+    let user: User?
+    let error: String?
+}
+
 import CryptoKit
 
 func generateToken(for userId: String) -> String {
