@@ -22,3 +22,9 @@ build/
 
 # CocoaPods
 Pods/
+
+
+# Node.js
+node_modules/
+
+.env
